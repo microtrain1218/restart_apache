@@ -14,7 +14,7 @@ VHOSTS=/etc/apache2/sites-available/*.conf
 
 if [ $# -ne 2 ]
 then
-    echo "ERROR: $0 requires two parameters {virtual-host} {restart|reload}"
+    echo -e "\e[31mERROR:${0} requires \e[1m\e[33mtwo\e[0m \e[31mparamters\e[0m  \n * a virtual-host configuration \n * a service command"
     exit 1
 fi
 
@@ -30,9 +30,9 @@ do
   # is an error
   if [ -z  "$VALID_VHOSTS" ]
     then
-      VALID_VHOSTS="$VHOST"
+      VALID_VHOSTS="\n * $VHOST"
     else
-      VALID_VHOSTS="${VALID_VHOSTS}|$VHOST"
+      VALID_VHOSTS="${VALID_VHOSTS}\n * $VHOST"
     fi
 
   if [ "$FILENAME" == "/etc/apache2/sites-available/${CONFIG}.conf" ]
@@ -47,7 +47,7 @@ done
 # We could not match the firstargument to a virtual-host preset the user with an error
 if [ $FILEMATCH  == false ]
 then
-    echo "ERROR: Invalid ${CONFIG} is NOT a valid virtual-host file {$VALID_VHOSTS}"
+    echo -e "\e[31mERROR:\e[0m \e[1m\e[33m${CONFIG}\e[0m \e[31mis NOT a valid virtual-host\e[0m \nPlease choose from the following ${VALID_VHOSTS}"
     exit 1
 fi
 
@@ -64,6 +64,6 @@ then
     sudo a2ensite "$CONFIG"
     sudo service apache2 "$COMMAND"
 else
-    echo "ERROR: $COMMAND is not a valid service directive {reload|restart}"
+    echo -e "\e[31mERROR:\e[0m \e[1m\e[33m${COMMAND}\e[0m \e[31mis NOT a valid service command\e[0m \nPlease choose from the following \n * restart \n * reload"
     exit 1
 fi
